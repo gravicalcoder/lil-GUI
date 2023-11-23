@@ -9,7 +9,19 @@ import GUI from 'lil-gui'
  * Base
  */
 
-const gui = new GUI()
+//const gui = new GUI()
+const gui = new GUI({
+    width: 300,
+    title: 'Nice debug UI',
+    closeFolders: false
+})
+//gui.close()
+//gui.hide()
+window.addEventListener('keydown', (event) =>
+{
+    if(event.key == 'h')
+        gui.show(gui._hidden)
+})
 const debugObject = {}
 
 
@@ -18,6 +30,9 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+const cubeTweaks = gui.addFolder('Awesome cube')
+//cubeTweaks.close()
 
 /**
  * Object
@@ -31,7 +46,8 @@ const material = new THREE.MeshBasicMaterial({ color: debugObject.color, wirefra
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
-gui
+//gui
+cubeTweaks
     .add(mesh.position, 'y')
     .min(- 3)
     .max(3)
@@ -48,9 +64,13 @@ const myObject = {
 gui.add(myObject, 'myVariable')
 */
 
-gui.add(mesh, 'visible')
+//gui
+cubeTweaks
+    .add(mesh, 'visible')
 
-gui.add(material, 'wireframe')
+//gui
+cubeTweaks
+.add(material, 'wireframe')
 
 /*
 gui
@@ -68,7 +88,8 @@ gui
         })
 */
 
-gui
+//gui
+cubeTweaks
     .addColor(debugObject, 'color')
     .onChange(() =>
     {
@@ -88,7 +109,9 @@ debugObject.spin = () =>
     gsap.to(mesh.rotation, { duration: 0.5, y: mesh.rotation.y + Math.PI * 2 })
 }
 
-gui.add(debugObject, 'spin')
+//gui
+cubeTweaks
+.add(debugObject, 'spin')
 
 /*
 gui
@@ -99,7 +122,8 @@ gui
 */
 
 debugObject.subdivision = 2
-gui
+//gui
+cubeTweaks
     .add(debugObject, 'subdivision')
     .min(1)
     .max(20)
@@ -113,6 +137,7 @@ gui
     .onFinishChange(() =>
     {
         console.log('subdivision finished changing')
+        mesh.geometry.dispose()
         mesh.geometry = new THREE.BoxGeometry(
             1, 1, 1,
             debugObject.subdivision, debugObject.subdivision, debugObject.subdivision
